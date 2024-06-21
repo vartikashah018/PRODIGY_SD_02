@@ -1,0 +1,51 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+class GuessNumberGame:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Guess the Number Game")
+
+        self.secret_number = random.randint(1, 100)
+        self.attempts = 0
+
+        self.label = tk.Label(root, text="Guess the number (between 1 and 100):")
+        self.label.pack(pady=10)
+
+        self.entry = tk.Entry(root, width=20)
+        self.entry.pack(pady=5)
+
+        self.button = tk.Button(root, text="Guess", command=self.check_guess)
+        self.button.pack(pady=10)
+
+        self.message = tk.Label(root, text="")
+        self.message.pack(pady=10)
+
+    def check_guess(self):
+        try:
+            guess = int(self.entry.get())
+            self.attempts += 1
+
+            if guess < self.secret_number:
+                self.message.config(text="Too low! Try again.")
+            elif guess > self.secret_number:
+                self.message.config(text="Too high! Try again.")
+            else:
+                messagebox.showinfo("Congratulations!", f"You guessed the number {self.secret_number} correctly!\nIt took you {self.attempts} attempts.")
+                self.reset_game()
+
+            self.entry.delete(0, tk.END)  # Clear the entry after each guess
+
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid number.")
+
+    def reset_game(self):
+        self.secret_number = random.randint(1, 100)
+        self.attempts = 0
+        self.message.config(text="")
+
+# Create the main application window
+root = tk.Tk()
+game = GuessNumberGame(root)
+root.mainloop()
